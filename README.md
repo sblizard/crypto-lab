@@ -6,5 +6,5 @@ A personal lab for experimenting with cryptographic algorithms and security prot
 
 ## Projects
 
-- [Signal double ratchet algroithm](/double-ratchet//README.md)
-- [Private note taker](/private-notes/README.md)
+- [Signal double ratchet algroithm](/double-ratchet/)
+- [Private note taker](/private-notes/)
