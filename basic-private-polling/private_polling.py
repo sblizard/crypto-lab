@@ -33,8 +33,20 @@ def encrypt(pk: int, m: int) -> Ciphertext:
     return Ciphertext(c1=Point(CURVE.g, u.x, u.y), c2=Point(CURVE.g, v.x, v.y), r=r)
 
 
-def decrypt(sk: int, c_sum: tuple[int, int]) -> int:
-    return 0
+def decrypt(sk: int, c_sum: Ciphertext, num_votes: int) -> int:
+    """Decrypt summed ciphertext to recover final vote tally."""
+    U = CURVE.on_curve(c_sum.c1.x, c_sum.c1.y)
+    V = CURVE.on_curve(
+        c_sum.c2.x,
+        c_sum.c2.y,
+    )
+
+    M = V + (-(sk * U))
+
+    for m in range(0, num_votes):
+        if m * CURVE.g == M:
+            return m
+    raise ValueError("Message not found in search range")
 
 
 def generate_proof(pk: int, c: tuple[int, int], m: int, r: int) -> ChaumPedersenProof:
