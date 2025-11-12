@@ -6,6 +6,11 @@ from pydantic import BaseModel
 # built-in
 
 
+class ECCKeyPair(BaseModel):
+    public_key: tuple[int, int]
+    private_key: int
+
+
 class Proof(BaseModel):
     commitment_a: int
     commitment_b: int

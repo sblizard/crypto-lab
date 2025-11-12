@@ -1,15 +1,26 @@
 # internal
-from .types import ChaumPedersenProof, Proof, EncryptedVote
+from .types import ChaumPedersenProof, Proof, EncryptedVote, ECCKeyPair
 
 # external
+from tinyec import registry
+
 
 # built-in
-from typing import Tuple
+from typing import cast
+import secrets
+
+CURVE = registry.get_curve("secp256r1")
 
 
-def keyGen() -> Tuple[int, int]:
+def keyGen() -> ECCKeyPair:
     """Generate a keypair (pk, sk)"""
-    return 0, 0
+    priv_key = secrets.randbelow(CURVE.field.n)
+    pub_key_point = priv_key * CURVE.g
+    assert (
+        pub_key_point.x is not None and pub_key_point.y is not None
+    ), "Invalid public key point"
+    pub_key = (cast(int, pub_key_point.x), cast(int, pub_key_point.y))
+    return ECCKeyPair(public_key=pub_key, private_key=priv_key)
 
 
 def encrypt(pk: int, m: int) -> tuple[int, int, int]:
