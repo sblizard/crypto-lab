@@ -1,4 +1,4 @@
-# PrivNotes — Encrypted Note Storage System
+# Encrypted Note Storage System
 
 A secure encrypted note storage system implementing password-based key derivation and authenticated encryption.  
 Developed as part of my personal **Crypto Lab** for exploring practical cryptographic design patterns.
