@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "private-polling"
+version = "0.1.0"
+description = "A cryptographically secure polling protocol"
+authors = ["Sean Blizard <emailseanblizard@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
