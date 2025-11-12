@@ -2,6 +2,7 @@
 
 # external
 from pydantic import BaseModel
+from tinyec.ec import Point
 
 # built-in
 
@@ -27,3 +28,9 @@ class ChaumPedersenProof(BaseModel):
     A1: int
     A2: int
     z: int
+
+
+class Ciphertext(BaseModel):
+    c1: Point
+    c2: Point
+    r: int
