@@ -1,6 +1,6 @@
 # Cryptography Messenger
 
-A secure end-to-end encrypted messaging client implementing the Double Ratchet algorithm, as used in Signal and WhatsApp.
+A secure end-to-end encrypted messaging client implementing the [Double Ratchet algorithm](https://signal.org/docs/specifications/doubleratchet/), as used in Signal and WhatsApp.
 
 ## Features
 
