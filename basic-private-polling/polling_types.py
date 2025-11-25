@@ -22,12 +22,19 @@ class ChaumPedersenProof(BaseModel):
     z: int
 
 
-class Ciphertext(BaseModel):
+class InternalCiphertext(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     c1: Point
     c2: Point
     r: int
+
+
+class Ciphertext(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    c1: Point
+    c2: Point
 
 
 class EncryptedVote(BaseModel):

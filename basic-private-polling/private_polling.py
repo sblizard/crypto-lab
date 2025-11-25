@@ -28,14 +28,14 @@ def keyGen() -> ECCKeyPair:
     return ECCKeyPair(public_key=pub_key_point, private_key=priv_key)
 
 
-def encrypt(pk: Point, m: int) -> Ciphertext:
+def encrypt(pk: Point, m: int) -> tuple[Ciphertext, int]:
     """Encrypt message m under public key pk, return ciphertext (c1, c2, r)."""
     r = secrets.randbelow(CURVE.field.n)
 
     U = cast(Point, r * CURVE.g)
     V = cast(Point, (m * CURVE.g) + (r * pk))
 
-    return Ciphertext(c1=U, c2=V, r=r)
+    return Ciphertext(c1=U, c2=V), r
 
 
 def decrypt(sk: int, c_sum: Ciphertext, num_votes: int) -> int:
@@ -53,11 +53,10 @@ def decrypt(sk: int, c_sum: Ciphertext, num_votes: int) -> int:
     raise ValueError("No matching plaintext found")
 
 
-def generate_proof(pk: Point, ct: Ciphertext, m: int) -> ChaumPedersenProof:
+def generate_proof(pk: Point, ct: Ciphertext, m: int, r: int) -> ChaumPedersenProof:
     """Generate Chaum-Pedersen proof that ciphertext encrypts 0 or 1."""
     U: Point = ct.c1
     V: Point = ct.c2
-    r: int = ct.r
 
     w = secrets.randbelow(CURVE.field.n)
 
@@ -121,8 +120,8 @@ def verify_proof(pk: Point, ct: Ciphertext, proof: ChaumPedersenProof) -> bool:
 
 def submit_vote(pk: Point, vote: int) -> EncryptedVote:
     """Return an encrypted vote and proof."""
-    ct: Ciphertext = encrypt(pk=pk, m=vote)
-    proof: ChaumPedersenProof = generate_proof(pk=pk, ct=ct, m=vote)
+    ct, r = encrypt(pk=pk, m=vote)
+    proof: ChaumPedersenProof = generate_proof(pk=pk, ct=ct, m=vote, r=r)
 
     return EncryptedVote(
         ciphertext=ct,
@@ -173,5 +172,4 @@ def add_two_ciphertexts(c1: Ciphertext, c2: Ciphertext) -> Ciphertext:
     return Ciphertext(
         c1=cast(Point, c1.c1 + c2.c1),
         c2=cast(Point, c1.c2 + c2.c2),
-        r=(c1.r + c2.r) % CURVE.field.n,
     )
