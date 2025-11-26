@@ -27,7 +27,7 @@ func AggregateSignatures(sigA, sigB *blst.P2Affine, pkA, pkB *blst.P1Affine) (*b
 	return agg.ToAffine(), nil
 }
 
-func AggergateVerifiy(pkA, pkB *blst.P1Affine, aggSig *blst.P2Affine, msg []byte) bool {
+func AggregateVerify(pkA, pkB *blst.P1Affine, aggSig *blst.P2Affine, msg []byte) bool {
 	t := ComputeHash(pkA, pkB, AGG_DST)
 
 	pkAt := new(blst.P1)
@@ -52,13 +52,13 @@ func AggergateVerifiy(pkA, pkB *blst.P1Affine, aggSig *blst.P2Affine, msg []byte
 	)
 }
 
-func ComputeHash(pkA, pkB *blst.P1Affine, dst []byte) *blst.Scalar {
+func ComputeHash(pkA, pkB *blst.P1Affine, dts []byte) *blst.Scalar {
 	pkABytes := pkA.Compress()
 	pkBBytes := pkB.Compress()
 
 	message := append(pkABytes, pkBBytes...)
 
-	t := blst.HashToScalar(message, dst)
+	t := blst.HashToScalar(message, dts)
 
 	return t
 }

@@ -29,7 +29,7 @@ func Sign(sk *blst.SecretKey, m string) *blst.P2Affine {
 	return sig
 }
 
-func Verifiy(pk PublicKey, sig *blst.P2Affine, m string) bool {
+func Verify(pk PublicKey, sig *blst.P2Affine, m string) bool {
 	dst := []byte("BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_NUL_")
 
 	return sig.Verify(true, &pk, true, []byte(m), dst)
