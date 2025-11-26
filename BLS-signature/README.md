@@ -8,7 +8,7 @@ BLS signatures are short signatures based on bilinear pairings that enable effic
 
 ## Sections
 
-- [Signature Aggergation](/BLS-signature/signature-aggergations/)
+- [Signature Aggregation](/BLS-signature/signature-aggregations/)
 
 ## Use Cases
 

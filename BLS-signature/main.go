@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	sigagg "bls-signature/signature-aggergations"
+	sigagg "bls-signature/signature-aggregations"
 )
 
 func main() {
@@ -27,14 +27,14 @@ func main() {
 	}
 
 	fmt.Println("TestVerifyValid:")
-	if !Verifiy(*out.PublicKey, sig, msg) {
+	if !Verify(*out.PublicKey, sig, msg) {
 		panic("TestVerifyValid FAILED")
 	} else {
 		fmt.Println("  PASS")
 	}
 
 	fmt.Println("TestVerifyWrongMessage:")
-	if Verifiy(*out.PublicKey, sig, "wrong message") {
+	if Verify(*out.PublicKey, sig, "wrong message") {
 		panic("TestVerifyWrongMessage FAILED")
 	} else {
 		fmt.Println("  PASS")
@@ -42,7 +42,7 @@ func main() {
 
 	fmt.Println("TestVerifyWrongPublicKey:")
 	out2, _ := keyGen()
-	if Verifiy(*out2.PublicKey, sig, msg) {
+	if Verify(*out2.PublicKey, sig, msg) {
 		panic("TestVerifyWrongPublicKey FAILED")
 	} else {
 		fmt.Println("  PASS")
@@ -50,7 +50,7 @@ func main() {
 
 	fmt.Println("TestVerifyWrongSignature:")
 	wrongSig := Sign(out2.SecretKey, msg)
-	if Verifiy(*out.PublicKey, wrongSig, msg) {
+	if Verify(*out.PublicKey, wrongSig, msg) {
 		panic("TestVerifyWrongSignature FAILED")
 	} else {
 		fmt.Println("  PASS")
@@ -60,7 +60,7 @@ func main() {
 	messages := []string{"message1", "message2", "message3"}
 	for i, m := range messages {
 		testSig := Sign(out.SecretKey, m)
-		if !Verifiy(*out.PublicKey, testSig, m) {
+		if !Verify(*out.PublicKey, testSig, m) {
 			panic("TestMultipleMessages FAILED: signature " + fmt.Sprint(i) + " invalid")
 		}
 	}
@@ -70,10 +70,10 @@ func main() {
 	msg2 := "integration test"
 	sig2 := Sign(out.SecretKey, msg2)
 
-	if !Verifiy(*out.PublicKey, sig2, msg2) {
+	if !Verify(*out.PublicKey, sig2, msg2) {
 		panic("TestFullBLSFlow FAILED: correct signature rejected")
 	}
-	if Verifiy(*out.PublicKey, sig2, "not the same message") {
+	if Verify(*out.PublicKey, sig2, "not the same message") {
 		panic("TestFullBLSFlow FAILED: wrong message accepted")
 	}
 	fmt.Println("  PASS")
@@ -100,20 +100,20 @@ func main() {
 		panic("TestAggregateSignatures FAILED: aggregate signature is nil")
 	}
 
-	if !sigagg.AggergateVerifiy(keyPair1.PublicKey, keyPair2.PublicKey, aggSig, []byte(commonMsg)) {
+	if !sigagg.AggregateVerify(keyPair1.PublicKey, keyPair2.PublicKey, aggSig, []byte(commonMsg)) {
 		panic("TestAggregateSignatures FAILED: verification failed")
 	}
 	fmt.Println("  PASS")
 
 	fmt.Println("\nTestAggregateWrongMessage:")
 	wrongMsg := "wrong aggregate message"
-	if sigagg.AggergateVerifiy(keyPair1.PublicKey, keyPair2.PublicKey, aggSig, []byte(wrongMsg)) {
+	if sigagg.AggregateVerify(keyPair1.PublicKey, keyPair2.PublicKey, aggSig, []byte(wrongMsg)) {
 		panic("TestAggregateWrongMessage FAILED: wrong message accepted")
 	}
 	fmt.Println("  PASS")
 
 	fmt.Println("\nTestAggregateSwappedKeys:")
-	if sigagg.AggergateVerifiy(keyPair2.PublicKey, keyPair1.PublicKey, aggSig, []byte(commonMsg)) {
+	if sigagg.AggregateVerify(keyPair2.PublicKey, keyPair1.PublicKey, aggSig, []byte(commonMsg)) {
 		panic("TestAggregateSwappedKeys FAILED: swapped keys accepted")
 	}
 	fmt.Println("  PASS")
@@ -130,10 +130,10 @@ func main() {
 		panic("TestMultipleAggregations FAILED: " + err.Error())
 	}
 
-	if !sigagg.AggergateVerifiy(keyPair1.PublicKey, keyPair2.PublicKey, aggSig, []byte(commonMsg)) {
+	if !sigagg.AggregateVerify(keyPair1.PublicKey, keyPair2.PublicKey, aggSig, []byte(commonMsg)) {
 		panic("TestMultipleAggregations FAILED: first aggregation invalid")
 	}
-	if !sigagg.AggergateVerifiy(keyPair3.PublicKey, keyPair4.PublicKey, aggSig2, []byte(sharedMsg)) {
+	if !sigagg.AggregateVerify(keyPair3.PublicKey, keyPair4.PublicKey, aggSig2, []byte(sharedMsg)) {
 		panic("TestMultipleAggregations FAILED: second aggregation invalid")
 	}
 	fmt.Println("  PASS")

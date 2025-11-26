@@ -12,4 +12,3 @@ build: vet
 
 clean:
 	go clean
-	rm -f 
