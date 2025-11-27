@@ -8,7 +8,7 @@ from private_polling import (
     verify_proof,
     add_two_ciphertexts,
 )
-from polling_types import ECCKeyPair, EncryptedVote, Ciphertext
+from polling_types import ECCKeyPair, EncryptedVote
 from typing import cast
 from tinyec.ec import Point  # type: ignore
 

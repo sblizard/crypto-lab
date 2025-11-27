@@ -60,38 +60,48 @@ def generate_proof(pk: Point, ct: Ciphertext, m: int, r: int) -> ChaumPedersenPr
 
     w = secrets.randbelow(CURVE.field.n)
 
+    A1_b: Point = cast(Point, w * CURVE.g)
+    A2_b: Point = cast(Point, w * pk)
+
+    c_1minusb = secrets.randbelow(CURVE.field.n)
+    z_1minusb = secrets.randbelow(CURVE.field.n)
+    A1_1minusb = cast(Point, z_1minusb * CURVE.g - c_1minusb * U)
+
     if m == 0:
-        A1_0: Point = cast(Point, w * CURVE.g)
-        A2_0: Point = cast(Point, w * pk)
+        A2_1minusb = cast(
+            Point, z_1minusb * pk - c_1minusb * cast(Point, (V - CURVE.g))
+        )
+        c = hash_points(U, V, A1_b, A2_b, A1_1minusb, A2_1minusb)
 
-        c1 = secrets.randbelow(CURVE.field.n)
-        z1 = secrets.randbelow(CURVE.field.n)
-        A1_1 = cast(Point, z1 * CURVE.g - c1 * U)
-        A2_1 = cast(Point, z1 * pk - c1 * cast(Point, (V - CURVE.g)))
+    else:
+        A2_1minusb = cast(Point, z_1minusb * pk - c_1minusb * V)
+        c = hash_points(U, V, A1_1minusb, A2_1minusb, A1_b, A2_b)
 
-        c = hash_points(U, V, A1_0, A2_0, A1_1, A2_1)
-        c0 = (c - c1) % CURVE.field.n
-        z0 = (w + c0 * r) % CURVE.field.n
+    c_b = (c - c_1minusb) % CURVE.field.n
+    z_b = (w + c_b * r) % CURVE.field.n
 
+    if m == 0:
         return ChaumPedersenProof(
-            A1_0=A1_0, A2_0=A2_0, A1_1=A1_1, A2_1=A2_1, c0=c0, c1=c1, z0=z0, z1=z1
+            A1_0=A1_b,
+            A2_0=A2_b,
+            A1_1=A1_1minusb,
+            A2_1=A2_1minusb,
+            c0=c_b,
+            c1=c_1minusb,
+            z0=z_b,
+            z1=z_1minusb,
         )
 
     else:
-        A1_1 = cast(Point, w * CURVE.g)
-        A2_1 = cast(Point, w * pk)
-
-        c0 = secrets.randbelow(CURVE.field.n)
-        z0 = secrets.randbelow(CURVE.field.n)
-        A1_0 = cast(Point, z0 * CURVE.g - c0 * U)
-        A2_0 = cast(Point, z0 * pk - c0 * V)
-
-        c = hash_points(U, V, A1_0, A2_0, A1_1, A2_1)
-        c1 = (c - c0) % CURVE.field.n
-        z1 = (w + c1 * r) % CURVE.field.n
-
         return ChaumPedersenProof(
-            A1_0=A1_0, A2_0=A2_0, A1_1=A1_1, A2_1=A2_1, c0=c0, c1=c1, z0=z0, z1=z1
+            A1_0=A1_1minusb,
+            A2_0=A2_1minusb,
+            A1_1=A1_b,
+            A2_1=A2_b,
+            c0=c_1minusb,
+            c1=c_b,
+            z0=z_1minusb,
+            z1=z_b,
         )
 
 
