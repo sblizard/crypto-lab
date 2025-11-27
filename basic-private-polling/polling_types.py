@@ -17,9 +17,16 @@ class ECCKeyPair(BaseModel):
 class ChaumPedersenProof(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    A1: Inf | Point
-    A2: Inf | Point
-    z: int
+    A1_0: Inf | Point
+    A2_0: Inf | Point
+
+    A1_1: Inf | Point
+    A2_1: Inf | Point
+
+    c0: int
+    c1: int
+    z0: int
+    z1: int
 
 
 class InternalCiphertext(BaseModel):
